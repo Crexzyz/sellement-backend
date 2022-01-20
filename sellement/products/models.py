@@ -17,7 +17,7 @@ class Product(models.Model):
     stock = models.IntegerField(default=0)
     purchase_price = models.FloatField(default=0.0)
     sell_price = models.FloatField(default=0.0)
-    last_modified_date = models.DateTimeField(auto_now=True)
+    date_modified = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField(Category, blank=True)
 
     def __str__(self) -> str:

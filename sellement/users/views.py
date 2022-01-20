@@ -15,10 +15,8 @@ class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.filter(is_active=True)
 
     def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return UserLoginSerializer
-
-        return UserModelSerializer
+        return (UserLoginSerializer if self.request.method == 'POST'
+                else UserModelSerializer)
 
     @action(detail=False, methods=['POST'],
             permission_classes=[AllowAny])
