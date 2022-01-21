@@ -4,6 +4,9 @@ from rest_framework.pagination import PageNumberPagination
 
 
 class PaginatedViewSet(viewsets.ModelViewSet):
+    """
+    ModelViewSet that paginates data using the PageNumberPagination class
+    """
     pagination_class = PageNumberPagination
     serializer_class = None
 
