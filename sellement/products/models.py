@@ -30,16 +30,22 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def emptyForm() -> dict:
-        name = TextField("", "name", "Product name", 0,
+    def form(self) -> dict:
+        return Product.emptyForm(self.name, self.description, self.stock,
+                                 self.purchase_price, self.sell_price)
+
+    def emptyForm(name_val="", desc_val="", stock_val=0,
+                  purchase_price_val=0.0, sell_price_val=0.0) -> dict:
+        name = TextField(name_val, "name", "Product name", 0,
                          Product.NAME_MAX_LENGTH)
-        description = TextareaField("", "description", "Description", 1,
+        description = TextareaField(desc_val, "description", "Description", 1,
                                     Product.DESCRIPTION_MAX_LENGTH, 4)
-        stock = NumberField(0, "stock", "Stock", 2, 0)
+        stock = NumberField(stock_val, "stock", "Stock", 2, 0)
         # TODO: Get currency symbol from database
-        purchase_price = CurrencyField(0, "purchase_price", "Purchase price",
-                                       2, 0, "C")
-        sell_price = CurrencyField(0, "sell_price", "Sell price", 3, 0, "C")
+        purchase_price = CurrencyField(purchase_price_val, "purchase_price",
+                                       "Purchase price", 2, 0, "₡")
+        sell_price = CurrencyField(sell_price_val, "sell_price", "Sell price",
+                                   3, 0, "₡")
         # TODO: Allow categories as an input
 
         fields = [name, description, stock, purchase_price, sell_price]
