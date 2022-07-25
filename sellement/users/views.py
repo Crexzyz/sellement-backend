@@ -12,15 +12,18 @@ from users.models import User
 
 
 class UserViewSet(viewsets.GenericViewSet):
+    """Provides login and logout actions"""
     queryset = User.objects.filter(is_active=True)
 
     def get_serializer_class(self):
+        """Returns a login serializer if a POST action is received,
+        User serializer otherwise"""
         return (UserLoginSerializer if self.request.method == 'POST'
                 else UserModelSerializer)
 
-    @action(detail=False, methods=['POST'],
-            permission_classes=[AllowAny])
+    @action(detail=False, methods=['POST'], permission_classes=[AllowAny])
     def login(self, request):
+        """Login action open for any unauthenticated user"""
         serializer = UserLoginSerializer(data=request.data)
         response = {}
         status_code = 0
@@ -38,6 +41,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['GET'])
     def logout(self, request):
+        """Logs out an user by deleting its authentication token"""
         request.user.auth_token.delete()
         django_logout(request)
 
