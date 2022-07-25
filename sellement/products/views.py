@@ -21,22 +21,24 @@ class ProductViewSet(PaginatedViewSet):
         products = Product.objects.all().order_by('id')
         return super().paginate_data(products)
 
-    @action(detail=False, methods=["GET"], url_path='form/(?P<pk>[^/.]+)')
-    def form(self, request, pk=None):
-        """Returns the model's form. If given with a primary key, it
-        will return the data of the selected instance"""
+    @action(detail=False, methods=["GET"], url_path="form")
+    def emptyForm(self, request):
+        # TODO: Create generic class that automatically adds this form
+        # functions, like ModelViewSet
+        "Returns the empty form that should be presented to create a Product"
+        return Response(Product.emptyForm(), status.HTTP_200_OK)
+
+    @action(detail=True, methods=["GET"])
+    def form(self, request, pk):
+        """Returns the model's form of an existing Product instance"""
         form: dict = {}
         statusCode = status.HTTP_200_OK
-
-        if pk is not None:
-            try:
-                product: Product = Product.objects.get(pk=pk)
-                form = product.form()
-            except Product.DoesNotExist:
-                statusCode = status.HTTP_404_NOT_FOUND
-                form["error"] = "Product does not exist"
-        else:
-            form = Product.emptyForm()
+        try:
+            product: Product = Product.objects.get(pk=pk)
+            form = product.form()
+        except Product.DoesNotExist:
+            statusCode = status.HTTP_404_NOT_FOUND
+            form["error"] = "Product does not exist"
 
         return Response(form, statusCode)
 

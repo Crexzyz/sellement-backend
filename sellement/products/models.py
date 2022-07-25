@@ -31,10 +31,12 @@ class Product(models.Model):
         return self.name
 
     def form(self) -> dict:
-        return Product.emptyForm(self.name, self.description, self.stock,
-                                 self.purchase_price, self.sell_price)
+        return Product.emptyForm(
+            self.pk, self.name, self.description, self.stock,
+            self.purchase_price, self.sell_price
+        )
 
-    def emptyForm(name_val="", desc_val="", stock_val=0,
+    def emptyForm(id_val=None, name_val="", desc_val="", stock_val=0,
                   purchase_price_val=0.0, sell_price_val=0.0) -> dict:
         name = TextField(name_val, "name", "Product name", 0,
                          Product.NAME_MAX_LENGTH)
@@ -49,6 +51,11 @@ class Product(models.Model):
         # TODO: Allow categories as an input
 
         fields = [name, description, stock, purchase_price, sell_price]
+
+        if id_val is not None:
+            id = TextField(id_val, "id", "id", 4, Product.NAME_MAX_LENGTH,
+                           hidden=True, required=True)
+            fields.append(id)
         return {
             "fields": [field.toDict() for field in fields]
         }
