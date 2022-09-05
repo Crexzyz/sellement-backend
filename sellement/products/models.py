@@ -7,11 +7,21 @@ from common.form_fields.textarea_field import TextareaField
 
 
 class Category(models.Model):
+    NAME_MAX_LENGTH = 30
+
     """Represents the category of one or more products"""
-    name = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=NAME_MAX_LENGTH, primary_key=True)
 
     class Meta:
         verbose_name_plural = "categories"
+
+    def form(self) -> dict:
+        return Category.emptyForm(self.name)
+
+    def emptyForm(name_val="") -> dict:
+        name = TextField(name_val, "name", "Name", 0, Category.NAME_MAX_LENGTH)
+        fields = [name]
+        return {"fields": [field.toDict() for field in fields]}
 
 
 class Product(models.Model):

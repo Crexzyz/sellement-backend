@@ -25,12 +25,20 @@ class ProductViewSet(PaginatedViewSet):
     def emptyForm(self, request):
         # TODO: Create generic class that automatically adds this form
         # functions, like ModelViewSet
-        "Returns the empty form that should be presented to create a Product"
+        """
+        Returns the empty form that should be presented to create a Product
+
+        Answers to path `/products/form/`
+        """
         return Response(Product.emptyForm(), status.HTTP_200_OK)
 
     @action(detail=True, methods=["GET"])
     def form(self, request, pk):
-        """Returns the model's form of an existing Product instance"""
+        """
+        Returns the model's form of an existing Product instance.
+
+        Answers to path `/products/:id/form/`
+        """
         form: dict = {}
         statusCode = status.HTTP_200_OK
         try:
@@ -52,3 +60,30 @@ class CategoryViewSet(PaginatedViewSet):
         """Returns all the categories in the database"""
         categories = Category.objects.all().order_by('name')
         return super().paginate_data(categories)
+
+    @action(detail=False, methods=["GET"], url_path="form")
+    def emptyForm(self, request):
+        """
+        Returns the empty form that should be presented to create a Category.
+
+        Answers to path `/categories/form/`
+        """
+        return Response(Category.emptyForm(), status.HTTP_200_OK)
+
+    @action(detail=True, methods=["GET"])
+    def form(self, request, pk):
+        """
+        Returns the model's form of an existing Category instance.
+
+        Answers to path `/categories/:name/form/`
+        """
+        form = {}
+        statusCode = status.HTTP_200_OK
+        try:
+            category = Category.objects.get(pk=pk)
+            form = category.form()
+        except Category.DoesNotExist:
+            statusCode = status.HTTP_404_NOT_FOUND
+            form["error"] = "Category does not exist"
+
+        return Response(form, statusCode)
