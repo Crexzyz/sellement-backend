@@ -1,4 +1,3 @@
-from unicodedata import decimal
 from django.db import models
 
 from common.form_fields.text_field import TextField
