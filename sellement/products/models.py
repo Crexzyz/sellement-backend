@@ -1,3 +1,4 @@
+from unicodedata import decimal
 from django.db import models
 
 from common.form_fields.text_field import TextField
@@ -19,11 +20,13 @@ class Product(models.Model):
     NAME_MAX_LENGTH = 50
     DESCRIPTION_MAX_LENGTH = 300
     # Id added automatically
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name="Name")
     description = models.CharField(max_length=300)
     stock = models.IntegerField(default=0)
-    purchase_price = models.FloatField(default=0.0)
-    sell_price = models.FloatField(default=0.0)
+    purchase_price = models.DecimalField(default=0.0, decimal_places=4,
+                                         max_digits=19)
+    sell_price = models.DecimalField(default=0.0, decimal_places=4,
+                                     max_digits=19)
     date_modified = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField(Category, blank=True)
 

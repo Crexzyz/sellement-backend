@@ -9,7 +9,6 @@ class CurrencyField(NumberField):
     def __init__(self, value: float, name: str, label: str, order: int,
                  min: int, symbol: str, hidden: bool = False,
                  required: bool = True) -> None:
-        super().__init__(value, name, label, order, min, hidden,
-                         required)
+        super().__init__(value, name, label, order, min, hidden, required)
         self.type = "currency"
         self.symbol = symbol
